@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday ❤️ | A Special Surprise</title>
+    <meta name="description" content="A magical birthday surprise crafted with love">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap"
+        rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Preload local images -->
+    <link rel="preload" href="img1.png" as="image">
+    <link rel="preload" href="img2.png" as="image">
+    <link rel="preload" href="img3.png" as="image">
+    <link rel="preload" href="img4.png" as="image">
+    <link rel="preload" href="img5.png" as="image">
+    <link rel="preload" href="img6.png" as="image">
+    <link rel="preload" href="img7.png" as="image">
+    <link rel="preload" href="img8.png" as="image">
+</head>
+
+<body>
+
+    <!-- ============================================================
+         LOADING SCREEN
+         ============================================================ -->
+    <div id="loading-screen">
+        <div class="loader-content">
+            <div class="loader-gift">🎁</div>
+            <h2 class="loader-text">Preparing Your Surprise...</h2>
+            <div class="loader-bar-track">
+                <div class="loader-bar-fill" id="loader-bar-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         THREE.JS CANVAS BACKGROUND (Starfield)
+         Fixed behind all content
+         ============================================================ -->
+    <canvas id="three-canvas"></canvas>
+
+    <!-- ============================================================
+         FLOATING DECORATIONS
+         Hearts, balloons, sparkles, butterflies - generated via JS
+         ============================================================ -->
+    <div id="floating-decorations" aria-hidden="true"></div>
+
+    <!-- ============================================================
+         MUSIC PLAYER (Floating button - fixed position)
+         ============================================================ -->
+    <div id="music-player">
+        <button id="music-btn" aria-label="Toggle music">
+            <span class="music-icon" id="music-icon">🎵</span>
+            <span class="music-label" id="music-label">Play Music</span>
+        </button>
+        <!--
+            REPLACE MUSIC:
+            Change the src attribute below to your own MP3 file path.
+            Example: <audio id="bg-music" src="my-song.mp3" loop></audio>
+            You can also place the MP3 in this same folder and reference it by name.
+        -->
+        <audio id="bg-music" loop preload="auto">
+            <source src="music.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <!-- ============================================================
+         HERO SECTION
+         Full-screen landing with 3D name and particles
+         ============================================================ -->
+    <section id="hero" class="section">
+        <div class="hero-content">
+            <p class="hero-subtitle" id="hero-subtitle">✨ A Special Day for a Special Person ✨</p>
+            <h1 class="hero-greeting" id="hero-greeting">✨ Happy Birthday ✨</h1>
+            <!--
+                REPLACE NAME:
+                Change the text inside the span below to the birthday person's name.
+            -->
+            <div class="hero-name-wrapper">
+                <h2 class="hero-name" id="hero-name" data-text="Miss Nurse">Miss Nurse</h2>
+            </div>
+            <p class="hero-heart">❤️</p>
+
+            <!-- Nursing Decorative Elements -->
+            <div class="nursing-element">
+                <div class="nursing-icons">
+                    <span class="nursing-emoji">👩‍⚕️</span>
+                    <svg class="heartbeat-svg" viewBox="0 0 240 60" xmlns="http://www.w3.org/2000/svg">
+                        <path class="heartbeat-glow"
+                            d="M 10 30 L 60 30 L 75 10 L 85 50 L 95 30 L 130 30 L 140 15 L 150 45 L 160 30 L 230 30"
+                            fill="none" stroke="rgba(255, 107, 157, 0.3)" stroke-width="4" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <path class="heartbeat-line"
+                            d="M 10 30 L 60 30 L 75 10 L 85 50 L 95 30 L 130 30 L 140 15 L 150 45 L 160 30 L 230 30"
+                            fill="none" stroke="url(#heartbeat-grad)" stroke-width="3" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <defs>
+                            <linearGradient id="heartbeat-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ff6b9d" />
+                                <stop offset="50%" stop-color="#f0c27f" />
+                                <stop offset="100%" stop-color="#ff1493" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                    <span class="nursing-emoji">💖</span>
+                </div>
+                <div class="nursing-badge">
+                    <span class="badge-icon" title="Stethoscope">🩺</span>
+                    <span class="badge-cross" title="Medical Cross">✚</span>
+                    <span class="badge-icon" title="Nurse Cap">👑</span>
+                </div>
+            </div>
+            <div class="hero-particles" id="hero-particles"></div>
+            <div class="scroll-indicator" id="scroll-indicator">
+                <span>Scroll Down</span>
+                <div class="scroll-arrow"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         3D PHOTO GALLERY
+         Rotating 3D carousel of photos
+         ============================================================ -->
+    <section id="gallery" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Beautiful As Always</h2>
+            <p class="section-subtitle">Drag To Explore</p>
+        </div>
+        <div class="carousel-wrapper carousel-container">
+            <div class="carousel-scene">
+                <div class="carousel-ring" id="carousel-ring">
+                    <!--
+                        REPLACE PHOTOS:
+                        Replace each img src with your own photo paths.
+                        You can add or remove carousel-item divs as needed.
+                    -->
+                    <div class="carousel-item" style="--i:0">
+                        <img src="img1.png" alt="Memory 1">
+                    </div>
+                    <div class="carousel-item" style="--i:1">
+                        <img src="img2.png" alt="Memory 2">
+                    </div>
+                    <div class="carousel-item" style="--i:2">
+                        <img src="img3.png" alt="Memory 3">
+                    </div>
+                    <div class="carousel-item" style="--i:3">
+                        <img src="img4.png" alt="Memory 4">
+                    </div>
+                    <div class="carousel-item" style="--i:4">
+                        <img src="img5.png" alt="Memory 5">
+                    </div>
+                    <div class="carousel-item" style="--i:5">
+                        <img src="img6.png" alt="Memory 6">
+                    </div>
+                    <div class="carousel-item" style="--i:6">
+                        <img src="img7.png" alt="Memory 7">
+                    </div>
+                    <div class="carousel-item" style="--i:7">
+                        <img src="img8.png" alt="Memory 8">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         BIRTHDAY MESSAGE SECTION
+         Glassmorphism card with typewriter animation
+         ============================================================ -->
+    <section id="message" class="section">
+        <div class="message-container">
+            <div class="glass-card message-card" id="message-card">
+                <div class="message-decoration-top">✦</div>
+                <h2 class="message-title">A Letter For You</h2>
+                <div class="message-divider"></div>
+                <!--
+                    REPLACE BIRTHDAY MESSAGE:
+                    Change the text inside the paragraph below with your personal message.
+                -->
+                <p class="message-text" id="typewriter-text">
+                    Aaj tera birthday hai, isliye socha ek din ke liye hi sahi, teri tareef kar hi du 😌
+                    Itne saalon me bahut kuch badal gaya, hum dono apni padhai aur life me busy ho gaye, lekin kuch
+                    yaadein aaj bhi waise hi hain.
+                    Parr, tu ab bhi utni hi ziddi, emotional aur thodi si pagal hai 🤭.
+                    Main bas itna chahta hoon ki tu hamesha khush rahe, jo bhi sapne dekhe hain wo poore kare, aur life
+                    me kabhi apni smile na miss kre.
+                    Kyuki sach me, teri smile teri sabse achhi virtue me se ek hai. Aur ha thoda vo ..gussa kam ho jata
+                    to.. par thik hai seh lenge,,
+                    Once again, Thank you un saari memories ke liye jo aaj bhi yaad aati hain.
+                    <br>
+                    Happy Birthday Miss Arpita Madam!🎉🎈
+                    <br>
+                    Ab ja, cake kha aur enjoy kar... aur haan, itni bhi badi mat ho jana ki hum jeise bekar doston ko
+                    bhul jaye!💖 Scroll kr kuchh aur bhi wait kar raha hai ...
+                </p>
+                <div class="message-decoration-bottom">✦</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         INTERACTIVE GIFT BOX
+         3D gift box that opens on click to reveal a letter
+         ============================================================ -->
+    <section id="gift" class="section">
+        <div class="section-header">
+            <h2 class="section-title">A Gift From My Heart</h2>
+            <p class="section-subtitle">Tap the gift to open it!</p>
+        </div>
+        <div class="gift-container" id="gift-container">
+            <div class="gift-box" id="gift-box">
+                <div class="gift-lid" id="gift-lid">
+                    <div class="gift-lid-front"></div>
+                    <div class="gift-lid-back"></div>
+                    <div class="gift-lid-left"></div>
+                    <div class="gift-lid-right"></div>
+                    <div class="gift-lid-top"></div>
+                    <div class="gift-bow" id="gift-bow">
+                        <div class="bow-loop bow-left"></div>
+                        <div class="bow-loop bow-right"></div>
+                        <div class="bow-knot"></div>
+                    </div>
+                </div>
+                <div class="gift-base" id="gift-base">
+                    <div class="gift-base-front"></div>
+                    <div class="gift-base-back"></div>
+                    <div class="gift-base-left"></div>
+                    <div class="gift-base-right"></div>
+                    <div class="gift-base-bottom"></div>
+                    <div class="gift-ribbon-v"></div>
+                    <div class="gift-ribbon-h"></div>
+                </div>
+            </div>
+            <!-- Hidden letter revealed when gift opens -->
+            <div class="gift-letter" id="gift-letter">
+                <div class="glass-card letter-card">
+                    <h3 class="letter-title">💌 My Loved One</h3>
+                    <div class="letter-divider"></div>
+                    <!--
+                        REPLACE GIFT LETTER:
+                        Change the text below with your personal hidden letter.
+                    -->
+                    <p class="letter-text">
+                        Surprise!
+                        Happy Birthday! 🎂✨
+
+                        It's crazy how we've gone from school days and random stories to where we are today.
+                        Thank you for all the memories, late-night conversations, endless talks, and the moments that
+                        still make me smile.
+                        No matter how much life changes or how busy we get, some people always stay special — and you're
+                        definitely one of them.
+                        Stay happy, stay kind, keep shining, and keep being you.❤️
+                    </p>
+                    <p class="letter-signature">— With all my love 💕</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         MEMORY TIMELINE
+         Vertical timeline with animated cards
+         ============================================================ -->
+    <section id="timeline" class="section">
+        <div class="section-header">
+            <h2 class="section-title">✨A Glimpse of Yours✨</h2>
+            <p class="section-subtitle">Beautiful Moments Captured💕</p>
+        </div>
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <!--
+                REPLACE TIMELINE ITEMS:
+                Update dates, titles, descriptions, and image sources below.
+                Add or remove timeline-item blocks as needed.
+            -->
+            <div class="timeline-item timeline-left">
+                <div class="timeline-dot"></div>
+                <div class="glass-card timeline-card">
+                    <img src="img1.png" alt="Memory" class="timeline-img">
+                    <div class="timeline-card-content">
+                        <span class="timeline-date">✨Birthday Special✨</span>
+                        <h3 class="timeline-card-title">A Beautiful Smile</h3>
+                        <p class="timeline-card-text">A smile that can brighten any day
+                            and make every moment a little more special.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item timeline-right">
+                <div class="timeline-dot"></div>
+                <div class="glass-card timeline-card">
+                    <img src="img2.png" alt="Memory" class="timeline-img">
+                    <div class="timeline-card-content">
+                        <span class="timeline-date">💖BEAUTIFUL MEMORY💖</span>
+                        <h3 class="timeline-card-title">💫Shining Bright</h3>
+                        <p class="timeline-card-text">Just like the lights around her, she brings warmth wherever she
+                            goes!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item timeline-left">
+                <div class="timeline-dot"></div>
+                <div class="glass-card timeline-card">
+                    <img src="img3.png" alt="Memory" class="timeline-img">
+                    <div class="timeline-card-content">
+                        <span class="timeline-date">💖BEAUTIFUL MEMORY💖</span>
+                        <h3 class="timeline-card-title">🌸Timeless Grace</h3>
+                        <p class="timeline-card-text">Some smiles need no caption,
+                            they speak for themselves.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item timeline-right">
+                <div class="timeline-dot"></div>
+                <div class="glass-card timeline-card">
+                    <img src="img4.png" alt="Memory" class="timeline-img">
+                    <div class="timeline-card-content">
+                        <span class="timeline-date">🌿BEAUTIFUL MOMENT🌿</span>
+                        <h3 class="timeline-card-title">Walking Towards Dreams</h3>
+                        <p class="timeline-card-text">With confidence in every step
+                            and dreams in her heart,
+                            she keeps moving forward</p>
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item timeline-left">
+                <div class="timeline-dot"></div>
+                <div class="glass-card timeline-card">
+                    <img src="img5.png" alt="Memory" class="timeline-img">
+                    <div class="timeline-card-content">
+                        <span class="timeline-date">🦋TIMELESS GRACE🦋</span>
+                        <h3 class="timeline-card-title">Wrapped in elegance,
+                        </h3>
+                        <p class="timeline-card-text">carrying a smile that brightens every moment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         BIRTHDAY CAKE SECTION
+         3D cake with animated candles and blow interaction
+         ============================================================ -->
+    <section id="cake" class="section">
+        <div class="section-header">
+            <h2 class="section-title">Make a Wish!</h2>
+            <p class="section-subtitle">Close your eyes, make a wish, and blow the candles</p>
+        </div>
+        <div class="cake-container" id="cake-container">
+            <div class="cake" id="cake-3d">
+                <!-- Candles -->
+                <div class="candles-row" id="candles-row">
+                    <div class="candle" data-index="0">
+                        <div class="flame-container">
+                            <div class="flame active" id="flame-0">
+                                <div class="flame-inner"></div>
+                                <div class="flame-glow"></div>
+                            </div>
+                            <div class="smoke" id="smoke-0"></div>
+                        </div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle" data-index="1">
+                        <div class="flame-container">
+                            <div class="flame active" id="flame-1">
+                                <div class="flame-inner"></div>
+                                <div class="flame-glow"></div>
+                            </div>
+                            <div class="smoke" id="smoke-1"></div>
+                        </div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle" data-index="2">
+                        <div class="flame-container">
+                            <div class="flame active" id="flame-2">
+                                <div class="flame-inner"></div>
+                                <div class="flame-glow"></div>
+                            </div>
+                            <div class="smoke" id="smoke-2"></div>
+                        </div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle" data-index="3">
+                        <div class="flame-container">
+                            <div class="flame active" id="flame-3">
+                                <div class="flame-inner"></div>
+                                <div class="flame-glow"></div>
+                            </div>
+                            <div class="smoke" id="smoke-3"></div>
+                        </div>
+                        <div class="candle-body"></div>
+                    </div>
+                    <div class="candle" data-index="4">
+                        <div class="flame-container">
+                            <div class="flame active" id="flame-4">
+                                <div class="flame-inner"></div>
+                                <div class="flame-glow"></div>
+                            </div>
+                            <div class="smoke" id="smoke-4"></div>
+                        </div>
+                        <div class="candle-body"></div>
+                    </div>
+                </div>
+                <!-- Cake layers -->
+                <div class="cake-top-layer">
+                    <div class="cake-drip"></div>
+                    <div class="cake-drip"></div>
+                    <div class="cake-drip"></div>
+                    <div class="cake-drip"></div>
+                    <div class="cake-drip"></div>
+                </div>
+                <div class="cake-middle-layer"></div>
+                <div class="cake-bottom-layer"></div>
+                <div class="cake-plate"></div>
+            </div>
+            <button class="action-btn cake-btn" id="blow-btn">
+                <span>🌬️ Blow Candles</span>
+            </button>
+        </div>
+        <!-- Wish popup (hidden initially) -->
+        <div class="wish-popup" id="wish-popup">
+            <div class="glass-card wish-card">
+                <h3>🌟 Your Wish Has Been Made! 🌟</h3>
+                <p>May all your dreams come true this year!</p>
+                <div class="wish-sparkles">✨💫⭐🌟✨</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         FIREWORKS FINALE
+         Full-screen celebration with fireworks, confetti, and message
+         ============================================================ -->
+    <section id="finale" class="section">
+        <div class="finale-content" id="finale-content">
+            <h2 class="finale-title">Aur Ha Ise Zaroor Check Karna!</h2>
+            <p class="finale-subtitle">Click below to light up the sky!</p>
+            <button class="action-btn celebrate-btn" id="celebrate-btn">
+                <span>PLZ OPEN ME</span>
+            </button>
+        </div>
+        <canvas id="fireworks-canvas"></canvas>
+        <div class="finale-message" id="finale-message">
+            <h2 class="final-title">
+                <span class="line-1">Arpita!✨</span>
+                <span class="line-2">This is for You </span>
+            </h2>
+            <p class="final-paragraph">
+                May your smile always stay this beautiful, your dreams turn into reality, and your nursing journey be
+                filled with success and happiness.
+                And no matter how much life changes, I hope you never forget how special you are to the people who truly
+                care about you.💖
+                And one more thing — never let anyone make you doubt your worth or steal your happiness. You deserve to
+                be valued, appreciated, and genuinely cared for.🌷
+            </p>
+            <div class="finale-hearts" id="finale-hearts"></div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SURPRISE GIFT SECTION
+         ============================================================ -->
+    <section id="surprise" class="section">
+        <div class="section-header">
+            <h2 class="section-title">🎁One Last Surprise</h2>
+            <p class="section-subtitle">Because every special person deserves a special gift.</p>
+        </div>
+        <div class="surprise-container">
+            <div class="glass-card surprise-card">
+                <p class="surprise-text">
+                    Thank you for being such a wonderful person. I hope this little gift brings a smile to your face and
+                    makes your music moments even more enjoyable. 💖
+                </p>
+                <a href="https://drive.google.com/file/d/1o0tw8TZYXebWJmXwpo-3gNCOYLc99Nj4/view?usp=drivesdk"
+                    target="_blank" rel="noopener noreferrer" class="action-btn claim-btn">
+                    <span>🎵 Claim Your Surprise Gift</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================
+         SCRIPTS
+         Three.js - 3D starfield background
+         GSAP - Scroll-triggered & entrance animations
+         Canvas Confetti - Confetti effects
+         Main script - All interactive logic
+         ============================================================ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
